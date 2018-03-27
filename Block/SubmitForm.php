@@ -4,71 +4,106 @@
  * LiqPay Extension for Magento 2
  *
  * @author     Volodymyr Konstanchuk http://konstanchuk.com
+ * @author     zamoroka https://github.com/zamoroka
  * @copyright  Copyright (c) 2017 The authors
  * @license    http://www.opensource.org/licenses/mit-license.html  MIT License
  */
 
 namespace LiqpayMagento\LiqPay\Block;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\View\Element\Template;
 use Magento\Sales\Model\Order;
 use LiqpayMagento\LiqPay\Sdk\LiqPay;
-use LiqpayMagento\LiqPay\Helper\Data as Helper;
+use LiqpayMagento\LiqPay\Helper\Helper as Helper;
 
-
+/**
+ * Class SubmitForm
+ *
+ * @package LiqpayMagento\LiqPay\Block
+ */
 class SubmitForm extends Template
 {
-    protected $_order = null;
+    /** @var \Magento\Sales\Model\Order|null $order */
+    private $order = null;
 
-    /* @var $_liqPay LiqPay */
-    protected $_liqPay;
+    /** @var \LiqpayMagento\LiqPay\Sdk\LiqPay $liqPay */
+    private $liqPay;
 
-    /* @var $_helper Helper */
-    protected $_helper;
+    /** @var \LiqpayMagento\LiqPay\Helper\Helper $helper */
+    private $helper;
 
+    /**
+     * SubmitForm constructor.
+     *
+     * @param \Magento\Framework\View\Element\Template\Context $context
+     * @param \LiqpayMagento\LiqPay\Sdk\LiqPay                 $liqPay
+     * @param \LiqpayMagento\LiqPay\Helper\Helper              $helper
+     * @param \Magento\Framework\Exception\LocalizedException  $localizedException
+     * @param array                                            $data
+     */
     public function __construct(
         Template\Context $context,
         LiqPay $liqPay,
         Helper $helper,
+        LocalizedException $localizedException,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($context, $data);
-        $this->_liqPay = $liqPay;
-        $this->_helper = $helper;
+        $this->liqPay = $liqPay;
+        $this->helper = $helper;
     }
 
     /**
      * @return Order
+     * @throws \Exception
      */
     public function getOrder()
     {
-        if ($this->_order === null) {
-            throw new \Exception('Order is not set');
+        if ($this->order === null) {
+            throw new LocalizedException(__('Order is not set'));
         }
-        return $this->_order;
+
+        return $this->order;
     }
 
+    /**
+     * @param \Magento\Sales\Model\Order $order
+     */
     public function setOrder(Order $order)
     {
-        $this->_order = $order;
+        $this->order = $order;
     }
 
+    /**
+     * Load block html from cache storage
+     *
+     * @return string|false
+     */
     protected function _loadCache()
     {
         return false;
     }
 
+    /**
+     * Render block HTML
+     *
+     * @return string
+     * @throws \Exception
+     */
     protected function _toHtml()
     {
         $order = $this->getOrder();
-        $html = $this->_liqPay->cnb_form(array(
-            'action' => 'pay',
-            'amount' => $order->getGrandTotal(),
-            'currency' => $order->getOrderCurrencyCode(),
-            'description' => $this->_helper->getLiqPayDescription($order),
-            'order_id' => $order->getIncrementId(),
-        ));
+        $html = $this->liqPay->cnb_form(
+            [
+                'action'      => 'pay',
+                'amount'      => $order->getGrandTotal(),
+                'currency'    => $order->getOrderCurrencyCode(),
+                'description' => $this->helper->getLiqPayDescription($order),
+                'order_id'    => $order->getIncrementId(),
+            ]
+        );
+
         return $html;
     }
 }

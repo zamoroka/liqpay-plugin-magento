@@ -2,6 +2,7 @@
  * LiqPay Extension for Magento 2
  *
  * @author     Volodymyr Konstanchuk http://konstanchuk.com
+ * @author     zamoroka https://github.com/zamoroka
  * @copyright  Copyright (c) 2017 The authors
  * @license    http://www.opensource.org/licenses/mit-license.html  MIT License
  */
@@ -23,20 +24,20 @@ define(
             defaults: {
                 template: 'LiqpayMagento_LiqPay/payment/checkout'
             },
-            getCode: function() {
+            getCode: function () {
                 return 'liqpaymagento_liqpay';
             },
-            isActive: function() {
+            isActive: function () {
                 return true;
             },
-            validate: function() {
+            validate: function () {
                 var $form = $('#' + this.getCode() + '-form');
                 return $form.validation() && $form.validation('isValid');
             },
             afterPlaceOrder: function () {
                 $.post(url.build('liqpay/checkout/form'), {
                     'random_string': this._generateRandomString(30)
-                }).done(function(data) {
+                }).done(function (data) {
                     if (!data.status) {
                         return
                     }
@@ -53,7 +54,7 @@ define(
                     }
                 });
             },
-            _generateRandomString: function(length) {
+            _generateRandomString: function (length) {
                 if (!length) {
                     length = 10;
                 }

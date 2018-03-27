@@ -4,49 +4,54 @@
  * LiqPay Extension for Magento 2
  *
  * @author     Volodymyr Konstanchuk http://konstanchuk.com
+ * @author     zamoroka https://github.com/zamoroka
  * @copyright  Copyright (c) 2017 The authors
  * @license    http://www.opensource.org/licenses/mit-license.html  MIT License
  */
 
 namespace LiqpayMagento\LiqPay\Controller\Checkout;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\View\LayoutFactory;
 use Magento\Checkout\Model\Session as CheckoutSession;
-use LiqpayMagento\LiqPay\Helper\Data as Helper;
+use LiqpayMagento\LiqPay\Helper\Helper as Helper;
 
-
+/**
+ * Class Form
+ *
+ * @package LiqpayMagento\LiqPay\Controller\Checkout
+ */
 class Form extends Action
 {
     /**
      * @var \Magento\Checkout\Model\Session
      */
-    protected $_checkoutSession;
+    private $checkoutSession;
 
     /**
      * @var Helper
      */
-    protected $_helper;
+    private $helper;
 
     /**
      * @var LayoutFactory
      */
-    protected $_layoutFactory;
+    private $layoutFactory;
 
     public function __construct(
         Context $context,
         CheckoutSession $checkoutSession,
         Helper $helper,
         LayoutFactory $layoutFactory
-    )
-    {
+    ) {
         parent::__construct($context);
-        $this->_checkoutSession = $checkoutSession;
-        $this->_helper = $helper;
-        $this->_layoutFactory = $layoutFactory;
+        $this->checkoutSession = $checkoutSession;
+        $this->helper = $helper;
+        $this->layoutFactory = $layoutFactory;
     }
 
     /**
@@ -58,39 +63,39 @@ class Form extends Action
     public function execute()
     {
         try {
-            if (!$this->_helper->isEnabled()) {
-                throw new \Exception(__('Payment is not allow.'));
+            if (!$this->helper->isEnabled()) {
+                throw new LocalizedException(__('Payment is not allow.'));
             }
             $order = $this->getCheckoutSession()->getLastRealOrder();
             if (!($order && $order->getId())) {
-                throw new \Exception(__('Order not found'));
+                throw new LocalizedException(__('Order not found'));
             }
-            if ($this->_helper->checkOrderIsLiqPayPayment($order)) {
-                /* @var $formBlock \LiqpayMagento\LiqPay\Block\SubmitForm */
-                $formBlock = $this->_layoutFactory->create()->createBlock('LiqpayMagento\LiqPay\Block\SubmitForm');
+            if ($this->helper->checkOrderIsLiqPayPayment($order)) {
+                /** @var $formBlock \LiqpayMagento\LiqPay\Block\SubmitForm */
+                $formBlock = $this->layoutFactory->create()->createBlock('LiqpayMagento\LiqPay\Block\SubmitForm');
                 $formBlock->setOrder($order);
                 $data = [
-                    'status' => 'success',
+                    'status'  => 'success',
                     'content' => $formBlock->toHtml(),
                 ];
             } else {
-                throw new \Exception('Order payment method is not a LiqPay payment method');
+                throw new LocalizedException(__('Order payment method is not a LiqPay payment method'));
             }
         } catch (\Exception $e) {
             $this->messageManager->addExceptionMessage($e, __('Something went wrong, please try again later'));
-            $this->_helper->getLogger()->critical($e);
+            $this->helper->getLogger()->critical($e);
             $this->getCheckoutSession()->restoreQuote();
             $data = [
-                'status' => 'error',
+                'status'   => 'error',
                 'redirect' => $this->_url->getUrl('checkout/cart'),
             ];
         }
         /** @var \Magento\Framework\Controller\Result\Json $result */
         $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         $result->setData($data);
+
         return $result;
     }
-
 
     /**
      * Return checkout session object
@@ -99,6 +104,6 @@ class Form extends Action
      */
     protected function getCheckoutSession()
     {
-        return $this->_checkoutSession;
+        return $this->checkoutSession;
     }
 }

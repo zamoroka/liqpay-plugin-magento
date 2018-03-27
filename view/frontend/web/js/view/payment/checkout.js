@@ -2,6 +2,7 @@
  * LiqPay Extension for Magento 2
  *
  * @author     Volodymyr Konstanchuk http://konstanchuk.com
+ * @author     zamoroka https://github.com/zamoroka
  * @copyright  Copyright (c) 2017 The authors
  * @license    http://www.opensource.org/licenses/mit-license.html  MIT License
  */
@@ -10,10 +11,8 @@ define(
         'uiComponent',
         'Magento_Checkout/js/model/payment/renderer-list'
     ],
-    function (
-        Component,
-        rendererList
-    ) {
+    function (Component,
+              rendererList) {
         'use strict';
         rendererList.push(
             {

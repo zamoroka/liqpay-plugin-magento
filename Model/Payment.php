@@ -4,12 +4,12 @@
  * LiqPay Extension for Magento 2
  *
  * @author     Volodymyr Konstanchuk http://konstanchuk.com
+ * @author     zamoroka https://github.com/zamoroka
  * @copyright  Copyright (c) 2017 The authors
  * @license    http://www.opensource.org/licenses/mit-license.html  MIT License
  */
 
 namespace LiqpayMagento\LiqPay\Model;
-
 
 class Payment extends \Magento\Payment\Model\Method\AbstractMethod
 {
@@ -20,18 +20,29 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod
     protected $_liqPay;
 
     protected $_canCapture = true;
+
     protected $_canVoid = true;
+
     protected $_canUseForMultishipping = false;
+
     protected $_canUseInternal = false;
+
     protected $_isInitializeNeeded = true;
+
     protected $_isGateway = true;
+
     protected $_canAuthorize = false;
+
     protected $_canCapturePartial = false;
+
     protected $_canRefund = false;
+
     protected $_canRefundInvoicePartial = false;
+
     protected $_canUseCheckout = true;
 
     protected $_minOrderTotal = 0;
+
     protected $_supportedCurrencyCodes;
 
     /**
@@ -39,6 +50,19 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod
      */
     protected $_urlBuilder;
 
+    /**
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
+     * @param \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory
+     * @param \Magento\Payment\Helper\Data $paymentData
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param Logger $logger
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
+     * @param array $data
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -49,9 +73,8 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod
         \Magento\Payment\Model\Method\Logger $logger,
         \Magento\Framework\UrlInterface $urlBuider,
         \LiqpayMagento\LiqPay\Sdk\LiqPay $liqPay,
-        array $data = array()
-    )
-    {
+        array $data = []
+    ) {
         parent::__construct(
             $context,
             $registry,
@@ -76,6 +99,7 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod
         if (!in_array($currencyCode, $this->_supportedCurrencyCodes)) {
             return false;
         }
+
         return true;
     }
 
@@ -86,6 +110,7 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod
         $billing = $order->getBillingAddress();
         try {
             $payment->setTransactionId('liqpay-' . $order->getId())->setIsTransactionClosed(0);
+
             return $this;
         } catch (\Exception $e) {
             $this->debugData(['exception' => $e->getMessage()]);
@@ -102,6 +127,7 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod
         if ($quote && $quote->getBaseGrandTotal() < $this->_minOrderTotal) {
             return false;
         }
+
         return parent::isAvailable($quote);
     }
 }
