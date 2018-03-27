@@ -20,17 +20,32 @@ Volodymyr Konstanchuk http://konstanchuk.com
 
 Установка:
 - установите официально SDK LiqPay следующей командой:
+```
 composer require liqpay/liqpay
+```
 Может понадобится добавления строк
 "minimum-stability": "dev",
 "prefer-stable": true,
 в composer.json
-- скопируйте папку с модулем в корень сайта;
+
+- создайте директорию модуля и скачайте репозиторий
+```
+mkdir app/code/LiqpayMagento/LiqPay \
+    && cd app/code/LiqpayMagento/LiqPay \
+    && git clone git@github.com:liqpay/plugin-magento.git . \
+    && cd ../../../../
+```
 - запустите следующие команды (может понадобится sudo):
-php bin/magento setup:upgrade
-php bin/magento setup:di:compile
-php bin/magento setup:static-content:deploy
-php bin/magento cache:clean
+```
+    bin/magento setup:upgrade \
+        && bin/magento setup:di:compile \
+        && bin/magento setup:static-content:deploy -f \
+        && bin/magento cache:flush \
+        && chown -R www-data:www-data . \
+        && chmod -R o+r . \
+        && chmod -R g+w . \
+        && find . -type d -exec chmod g+s {} \;
+```
 - все команды должны закончится успешно. В app/etc/config.php должен появится
 данный модуль данный модуль.
 
