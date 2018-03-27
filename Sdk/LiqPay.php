@@ -85,7 +85,7 @@ class LiqPay extends \LiqPay
     }
 
     /**
-     * @return \LiqpayMagento\LiqPay\Helper\Helper
+     * @return \LiqpayMagento\LiqPay\Helper\Data
      */
     public function getHelper()
     {

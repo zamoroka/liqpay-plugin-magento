@@ -15,7 +15,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\View\Element\Template;
 use Magento\Sales\Model\Order;
 use LiqpayMagento\LiqPay\Sdk\LiqPay;
-use LiqpayMagento\LiqPay\Helper\Helper as Helper;
+use LiqpayMagento\LiqPay\Helper\Data as Helper;
 
 /**
  * Class SubmitForm
@@ -30,7 +30,7 @@ class SubmitForm extends Template
     /** @var \LiqpayMagento\LiqPay\Sdk\LiqPay $liqPay */
     private $liqPay;
 
-    /** @var \LiqpayMagento\LiqPay\Helper\Helper $helper */
+    /** @var \LiqpayMagento\LiqPay\Helper\Data $helper */
     private $helper;
 
     /**
@@ -38,7 +38,7 @@ class SubmitForm extends Template
      *
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \LiqpayMagento\LiqPay\Sdk\LiqPay                 $liqPay
-     * @param \LiqpayMagento\LiqPay\Helper\Helper              $helper
+     * @param \LiqpayMagento\LiqPay\Helper\Data              $helper
      * @param \Magento\Framework\Exception\LocalizedException  $localizedException
      * @param array                                            $data
      */

@@ -17,7 +17,7 @@ use LiqpayMagento\LiqPay\Sdk\LiqPay;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Framework\DB\Transaction;
-use LiqpayMagento\LiqPay\Helper\Helper as Helper;
+use LiqpayMagento\LiqPay\Helper\Data as Helper;
 use Magento\Framework\App\RequestInterface;
 
 class LiqPayCallback implements LiqPayCallbackInterface
@@ -64,7 +64,7 @@ class LiqPayCallback implements LiqPayCallbackInterface
      * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
      * @param \Magento\Sales\Model\Service\InvoiceService $invoiceService
      * @param \Magento\Framework\DB\Transaction           $transaction
-     * @param \LiqpayMagento\LiqPay\Helper\Helper         $helper
+     * @param \LiqpayMagento\LiqPay\Helper\Data         $helper
      * @param \LiqpayMagento\LiqPay\Sdk\LiqPay            $liqPay
      * @param \Magento\Framework\App\RequestInterface     $request
      */

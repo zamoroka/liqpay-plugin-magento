@@ -18,7 +18,7 @@ use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\View\LayoutFactory;
 use Magento\Checkout\Model\Session as CheckoutSession;
-use LiqpayMagento\LiqPay\Helper\Helper as Helper;
+use LiqpayMagento\LiqPay\Helper\Data as Helper;
 
 /**
  * Class Form
