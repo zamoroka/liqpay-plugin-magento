@@ -2,7 +2,7 @@
   "name": "liqpaymagento/liqpay",
   "description": "LiqPay Payment",
   "type": "magento2-module",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "license": "MIT",
   "authors": [
     {
@@ -15,7 +15,6 @@
     "php": "^7.0",
     "liqpay/liqpay": "dev-master"
   },
-  "minimum-stability": "dev",
   "prefer-stable": true,
   "autoload": {
     "files": [
