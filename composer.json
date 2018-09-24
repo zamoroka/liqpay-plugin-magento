@@ -13,8 +13,9 @@
   ],
   "require": {
     "php": "^7.0",
-    "liqpay/liqpay": "dev-master"
+    "liqpay/liqpay": "^1.2"
   },
+  "minimum-stability": "dev",
   "prefer-stable": true,
   "autoload": {
     "files": [
